@@ -78,7 +78,7 @@
       <div class="info-card">
         <div class="info-title">📋 Промпт для ИИ</div>
         <div class="code-box">
-          <code>Создай рацион в JSON:
+          <code id="aiPrompt">Создай рацион в JSON:
 {
   "meals": [
     {
@@ -91,10 +91,66 @@
   ]
 }</code>
         </div>
+        <button onclick="copyPrompt()" class="btn-copy">📋 Скопировать промпт</button>
       </div>
       
       <textarea id="importData" placeholder='Вставь JSON от ИИ...' rows="12"></textarea>
       <button onclick="importDiet()" class="btn-success">📥 Импортировать</button>
+    </section>
+
+    <!-- Рецепты -->
+    <section class="page" id="recipesPage">
+      <div class="page-header">
+        <h1>Мои рецепты</h1>
+        <p class="page-subtitle">Создавай рецепты с расчетом КБЖУ</p>
+      </div>
+      
+      <button onclick="showCreateRecipe()" class="btn-primary">+ Создать рецепт</button>
+      
+      <div class="recipes-list" id="recipesList">
+        <!-- Список рецептов -->
+      </div>
+      
+      <!-- Форма создания рецепта (скрыта по умолчанию) -->
+      <div class="recipe-form" id="recipeForm" style="display: none;">
+        <div class="form-header">
+          <h2>Новый рецепт</h2>
+          <button onclick="hideCreateRecipe()" class="btn-close">✕</button>
+        </div>
+        
+        <input type="text" id="recipeName" placeholder="Название рецепта" class="input-field" />
+        <textarea id="recipeDescription" placeholder="Описание рецепта..." rows="3" class="input-field"></textarea>
+        
+        <div class="ingredients-section">
+          <h3>Ингредиенты</h3>
+          <div id="ingredientsList"></div>
+          <button onclick="addIngredient()" class="btn-add-dish">+ Добавить ингредиент</button>
+        </div>
+        
+        <div class="recipe-totals">
+          <h3>Итого на 100г:</h3>
+          <div class="stats-row">
+            <div class="stat-item">
+              <div class="stat-value" id="recipeTotalCalories">0</div>
+              <div class="stat-label">ккал</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="recipeTotalProtein">0</div>
+              <div class="stat-label">белки</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="recipeTotalCarbs">0</div>
+              <div class="stat-label">углеводы</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="recipeTotalFats">0</div>
+              <div class="stat-label">жиры</div>
+            </div>
+          </div>
+        </div>
+        
+        <button onclick="saveRecipe()" class="btn-success">💾 Сохранить рецепт</button>
+      </div>
     </section>
 
     <!-- Профиль -->
@@ -121,7 +177,7 @@
           <span>🗑️ Очистить рацион</span>
           <span class="arrow">›</span>
         </div>
-        <div class="menu-item">
+        <div class="menu-item" onclick="showAbout()">
           <span>ℹ️ О приложении</span>
           <span class="arrow">›</span>
         </div>
@@ -145,6 +201,10 @@
     <div class="nav-item" onclick="showSection('create')">
       <div class="nav-icon">✏️</div>
       <div class="nav-label">Создать</div>
+    </div>
+    <div class="nav-item" onclick="showSection('recipes')">
+      <div class="nav-icon">📖</div>
+      <div class="nav-label">Рецепты</div>
     </div>
     <div class="nav-item" onclick="showSection('import')">
       <div class="nav-icon">📥</div>

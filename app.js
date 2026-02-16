@@ -49,12 +49,16 @@ function showSection(section) {
   } else if (section === 'create') {
     document.getElementById('createPage').classList.add('active');
     document.querySelectorAll('.nav-item')[1].classList.add('active');
+  } else if (section === 'recipes') {
+    document.getElementById('recipesPage').classList.add('active');
+    document.querySelectorAll('.nav-item')[2].classList.add('active');
+    displayRecipes();
   } else if (section === 'import') {
     document.getElementById('importPage').classList.add('active');
-    document.querySelectorAll('.nav-item')[2].classList.add('active');
+    document.querySelectorAll('.nav-item')[3].classList.add('active');
   } else if (section === 'profile') {
     document.getElementById('profilePage').classList.add('active');
-    document.querySelectorAll('.nav-item')[3].classList.add('active');
+    document.querySelectorAll('.nav-item')[4].classList.add('active');
   }
 }
 
@@ -317,5 +321,190 @@ function loadTheme() {
   } else {
     body.classList.add('dark-theme');
     document.getElementById('themeLabel').innerHTML = '🌙 Темная тема';
+  }
+}
+
+// Копирование промпта
+function copyPrompt() {
+  const prompt = document.getElementById('aiPrompt').textContent;
+  navigator.clipboard.writeText(prompt).then(() => {
+    toast('✅ Промпт скопирован!');
+  }).catch(() => {
+    toast('❌ Ошибка копирования');
+  });
+}
+
+// О приложении
+function showAbout() {
+  toast('Diet Generator v1.0 - Управление рационом питания');
+}
+
+// ===== РЕЦЕПТЫ =====
+let currentRecipes = [];
+
+function showCreateRecipe() {
+  document.getElementById('recipeForm').style.display = 'block';
+  document.getElementById('ingredientsList').innerHTML = '';
+  document.getElementById('recipeName').value = '';
+  document.getElementById('recipeDescription').value = '';
+  updateRecipeTotals();
+}
+
+function hideCreateRecipe() {
+  document.getElementById('recipeForm').style.display = 'none';
+}
+
+function addIngredient() {
+  const list = document.getElementById('ingredientsList');
+  const index = list.children.length;
+  
+  const item = document.createElement('div');
+  item.className = 'ingredient-item';
+  item.dataset.index = index;
+  
+  item.innerHTML = `
+    <div class="ingredient-row">
+      <input type="text" placeholder="Название ингредиента" class="ing-name" oninput="updateRecipeTotals()" />
+      <input type="number" placeholder="Вес (г)" class="ing-weight" oninput="updateRecipeTotals()" min="0" />
+    </div>
+    <div class="ingredient-macros">
+      <input type="number" placeholder="ккал" class="ing-calories" oninput="updateRecipeTotals()" min="0" />
+      <input type="number" placeholder="Б" class="ing-protein" oninput="updateRecipeTotals()" min="0" />
+      <input type="number" placeholder="У" class="ing-carbs" oninput="updateRecipeTotals()" min="0" />
+      <input type="number" placeholder="Ж" class="ing-fats" oninput="updateRecipeTotals()" min="0" />
+    </div>
+  `;
+  
+  list.appendChild(item);
+}
+
+function updateRecipeTotals() {
+  const items = document.querySelectorAll('.ingredient-item');
+  let totalWeight = 0;
+  let totalCalories = 0;
+  let totalProtein = 0;
+  let totalCarbs = 0;
+  let totalFats = 0;
+  
+  items.forEach(item => {
+    const weight = parseFloat(item.querySelector('.ing-weight').value) || 0;
+    const calories = parseFloat(item.querySelector('.ing-calories').value) || 0;
+    const protein = parseFloat(item.querySelector('.ing-protein').value) || 0;
+    const carbs = parseFloat(item.querySelector('.ing-carbs').value) || 0;
+    const fats = parseFloat(item.querySelector('.ing-fats').value) || 0;
+    
+    totalWeight += weight;
+    totalCalories += calories;
+    totalProtein += protein;
+    totalCarbs += carbs;
+    totalFats += fats;
+  });
+  
+  // Пересчет на 100г
+  if (totalWeight > 0) {
+    const factor = 100 / totalWeight;
+    document.getElementById('recipeTotalCalories').textContent = Math.round(totalCalories * factor);
+    document.getElementById('recipeTotalProtein').textContent = Math.round(totalProtein * factor);
+    document.getElementById('recipeTotalCarbs').textContent = Math.round(totalCarbs * factor);
+    document.getElementById('recipeTotalFats').textContent = Math.round(totalFats * factor);
+  } else {
+    document.getElementById('recipeTotalCalories').textContent = 0;
+    document.getElementById('recipeTotalProtein').textContent = 0;
+    document.getElementById('recipeTotalCarbs').textContent = 0;
+    document.getElementById('recipeTotalFats').textContent = 0;
+  }
+}
+
+function saveRecipe() {
+  const name = document.getElementById('recipeName').value.trim();
+  const description = document.getElementById('recipeDescription').value.trim();
+  
+  if (!name) {
+    toast('Введи название рецепта');
+    return;
+  }
+  
+  const ingredients = [];
+  const items = document.querySelectorAll('.ingredient-item');
+  
+  items.forEach(item => {
+    const ingName = item.querySelector('.ing-name').value.trim();
+    const weight = parseFloat(item.querySelector('.ing-weight').value) || 0;
+    const calories = parseFloat(item.querySelector('.ing-calories').value) || 0;
+    const protein = parseFloat(item.querySelector('.ing-protein').value) || 0;
+    const carbs = parseFloat(item.querySelector('.ing-carbs').value) || 0;
+    const fats = parseFloat(item.querySelector('.ing-fats').value) || 0;
+    
+    if (ingName && weight > 0) {
+      ingredients.push({ name: ingName, weight, calories, protein, carbs, fats });
+    }
+  });
+  
+  if (ingredients.length === 0) {
+    toast('Добавь хотя бы один ингредиент');
+    return;
+  }
+  
+  const recipe = {
+    id: Date.now(),
+    name,
+    description,
+    ingredients,
+    calories: parseInt(document.getElementById('recipeTotalCalories').textContent),
+    protein: parseInt(document.getElementById('recipeTotalProtein').textContent),
+    carbs: parseInt(document.getElementById('recipeTotalCarbs').textContent),
+    fats: parseInt(document.getElementById('recipeTotalFats').textContent)
+  };
+  
+  currentRecipes.push(recipe);
+  localStorage.setItem('dietGeneratorRecipes', JSON.stringify(currentRecipes));
+  
+  toast('✅ Рецепт сохранен!');
+  hideCreateRecipe();
+  displayRecipes();
+}
+
+function displayRecipes() {
+  const list = document.getElementById('recipesList');
+  list.innerHTML = '';
+  
+  const saved = localStorage.getItem('dietGeneratorRecipes');
+  if (saved) {
+    currentRecipes = JSON.parse(saved);
+  }
+  
+  if (currentRecipes.length === 0) {
+    list.innerHTML = '<div class="empty-recipes">Нет рецептов<br>Создай свой первый рецепт</div>';
+    return;
+  }
+  
+  currentRecipes.forEach(recipe => {
+    const card = document.createElement('div');
+    card.className = 'recipe-card';
+    
+    card.innerHTML = `
+      <div class="recipe-card-header">
+        <div class="recipe-card-title">${recipe.name}</div>
+        <button onclick="deleteRecipe(${recipe.id})" class="btn-delete-recipe">🗑️</button>
+      </div>
+      ${recipe.description ? `<div class="recipe-card-desc">${recipe.description}</div>` : ''}
+      <div class="recipe-card-macros">
+        <span class="macro-badge">${recipe.calories} ккал</span>
+        <span class="macro-badge">Б: ${recipe.protein}г</span>
+        <span class="macro-badge">У: ${recipe.carbs}г</span>
+        <span class="macro-badge">Ж: ${recipe.fats}г</span>
+      </div>
+    `;
+    
+    list.appendChild(card);
+  });
+}
+
+function deleteRecipe(id) {
+  if (confirm('Удалить рецепт?')) {
+    currentRecipes = currentRecipes.filter(r => r.id !== id);
+    localStorage.setItem('dietGeneratorRecipes', JSON.stringify(currentRecipes));
+    displayRecipes();
+    toast('🗑️ Рецепт удален');
   }
 }

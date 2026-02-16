@@ -34,7 +34,11 @@ html, body {
   background: var(--bg);
   color: var(--text);
   overflow: hidden;
-  transition: background 0.3s, color 0.3s;
+}
+
+/* Плавные переходы для всех элементов при смене темы */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .app-container {
@@ -277,6 +281,12 @@ html, body {
   border-radius: 10px;
   color: var(--text);
   font-size: 15px;
+  min-width: 0;
+}
+
+.builder-meal-header input[type="time"] {
+  flex: 0 0 auto;
+  width: 100px;
 }
 
 .builder-meal-header input:focus {
@@ -418,13 +428,13 @@ textarea:focus {
 
 /* ===== PROFILE ===== */
 .profile-card {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  background: linear-gradient(135deg, #5a9f5e, #6fb573);
   border-radius: 20px;
   padding: 32px 24px;
   text-align: center;
   margin-bottom: 24px;
   color: white;
-  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+  box-shadow: 0 4px 12px rgba(90, 159, 94, 0.2);
 }
 
 .profile-avatar {
@@ -592,4 +602,189 @@ body.dark-theme .toggle-slider {
 /* ===== SCROLLBAR ===== */
 .content::-webkit-scrollbar {
   width: 0;
+}
+
+/* ===== COPY BUTTON ===== */
+.btn-copy {
+  width: 100%;
+  padding: 10px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 12px;
+}
+
+/* ===== RECIPES ===== */
+.recipes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.recipe-card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  cursor: pointer;
+}
+
+.recipe-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 8px;
+}
+
+.recipe-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.recipe-card-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.recipe-card-macros {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.recipe-form {
+  background: var(--card-bg);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.form-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.form-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.btn-close {
+  background: #FFEBEE;
+  border: none;
+  border-radius: 8px;
+  color: var(--danger);
+  font-size: 20px;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+}
+
+body.dark-theme .btn-close {
+  background: rgba(244, 67, 54, 0.1);
+}
+
+.input-field {
+  width: 100%;
+  padding: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 15px;
+  margin-bottom: 12px;
+  font-family: inherit;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.ingredients-section {
+  margin: 20px 0;
+}
+
+.ingredients-section h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.ingredient-item {
+  background: var(--bg);
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ingredient-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 8px;
+}
+
+.ingredient-macros {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.ingredient-item input {
+  padding: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 13px;
+}
+
+.ingredient-item input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.recipe-totals {
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 20px 0;
+}
+
+.recipe-totals h3 {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+.empty-recipes {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+}
+
+.btn-delete-recipe {
+  background: transparent;
+  border: none;
+  color: var(--danger);
+  font-size: 20px;
+  cursor: pointer;
+  padding: 4px;
 }
