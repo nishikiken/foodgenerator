@@ -195,11 +195,12 @@ html, body {
 }
 
 .meal-time {
-  font-size: 14px;
+  font-size: 13px;
   color: var(--text-secondary);
   background: var(--bg);
-  padding: 4px 12px;
+  padding: 4px 10px;
   border-radius: 12px;
+  white-space: nowrap;
 }
 
 .dish-item {
@@ -322,12 +323,12 @@ html, body {
 }
 
 .builder-dish input {
-  padding: 10px;
+  padding: 8px 6px;
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 8px;
   color: var(--text);
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .builder-dish input:focus {
@@ -338,7 +339,13 @@ html, body {
 .dish-macros-inputs {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
+  gap: 4px;
+}
+
+.dish-macros-inputs input {
+  font-size: 12px;
+  padding: 6px 4px;
+  text-align: center;
 }
 
 .btn-add-dish {
@@ -584,10 +591,11 @@ body.dark-theme .toggle-slider {
   bottom: 90px;
   left: 50%;
   transform: translateX(-50%) translateY(100px);
-  background: var(--text);
+  background: var(--card-bg);
+  border: 1px solid var(--border);
   padding: 12px 24px;
   border-radius: 24px;
-  color: white;
+  color: var(--text);
   font-size: 14px;
   opacity: 0;
   transition: all 0.3s ease;
@@ -739,22 +747,28 @@ body.dark-theme .btn-close {
 
 .ingredient-row {
   display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 8px;
+  grid-template-columns: 2fr 80px;
+  gap: 6px;
 }
 
 .ingredient-macros {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
+  gap: 4px;
 }
 
 .ingredient-item input {
-  padding: 8px;
+  padding: 8px 6px;
   background: var(--card-bg);
   border: 1px solid var(--border);
   border-radius: 6px;
   color: var(--text);
+  font-size: 12px;
+  text-align: center;
+}
+
+.ingredient-item input.ing-name {
+  text-align: left;
   font-size: 13px;
 }
 

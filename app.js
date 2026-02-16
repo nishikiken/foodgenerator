@@ -376,8 +376,8 @@ function addIngredient() {
   
   item.innerHTML = `
     <div class="ingredient-row">
-      <input type="text" placeholder="Название ингредиента" class="ing-name" oninput="updateRecipeTotals()" />
-      <input type="number" placeholder="Вес (г)" class="ing-weight" oninput="updateRecipeTotals()" min="0" />
+      <input type="text" placeholder="Ингредиент" class="ing-name" oninput="updateRecipeTotals()" />
+      <input type="number" placeholder="г" class="ing-weight" oninput="updateRecipeTotals()" min="0" />
     </div>
     <div class="ingredient-macros">
       <input type="number" placeholder="ккал" class="ing-calories" oninput="updateRecipeTotals()" min="0" />
