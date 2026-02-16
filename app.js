@@ -1,25 +1,32 @@
 // Хранилище данных
-let currentDiet = {
-  meals: []
-};
+let currentDiet = { meals: [] };
 
-// Загрузка данных из localStorage при старте
+// Загрузка при старте
 window.addEventListener('DOMContentLoaded', () => {
   loadDiet();
-  showSection('create');
+  displayDiet();
 });
 
 // Переключение секций
 function showSection(section) {
-  document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+  // Убираем active у всех страниц и nav-item
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
   
-  if (section === 'create') {
-    document.getElementById('createSection').style.display = 'block';
-  } else if (section === 'import') {
-    document.getElementById('importSection').style.display = 'block';
-  } else if (section === 'my') {
-    document.getElementById('mySection').style.display = 'block';
+  // Активируем нужную страницу
+  if (section === 'home') {
+    document.getElementById('homePage').classList.add('active');
+    document.querySelectorAll('.nav-item')[0].classList.add('active');
     displayDiet();
+  } else if (section === 'create') {
+    document.getElementById('createPage').classList.add('active');
+    document.querySelectorAll('.nav-item')[1].classList.add('active');
+  } else if (section === 'import') {
+    document.getElementById('importPage').classList.add('active');
+    document.querySelectorAll('.nav-item')[2].classList.add('active');
+  } else if (section === 'profile') {
+    document.getElementById('profilePage').classList.add('active');
+    document.querySelectorAll('.nav-item')[3].classList.add('active');
   }
 }
 
@@ -28,76 +35,64 @@ function addMeal() {
   const mealBuilder = document.getElementById('mealBuilder');
   const mealIndex = mealBuilder.children.length;
   
-  const mealItem = document.createElement('div');
-  mealItem.className = 'meal-item';
-  mealItem.dataset.index = mealIndex;
+  const mealDiv = document.createElement('div');
+  mealDiv.className = 'builder-meal';
+  mealDiv.dataset.index = mealIndex;
   
-  mealItem.innerHTML = `
-    <div class="meal-header">
-      <input type="text" placeholder="Название приема пищи (например, Завтрак)" class="meal-name" />
+  mealDiv.innerHTML = `
+    <div class="builder-meal-header">
+      <input type="text" placeholder="Название (Завтрак)" class="meal-name" />
       <input type="time" value="08:00" class="meal-time" />
-      <button onclick="removeMeal(${mealIndex})" class="remove-meal-btn">✕</button>
+      <button onclick="removeMeal(${mealIndex})" class="btn-remove">✕</button>
     </div>
-    <div class="dishes-list" data-meal="${mealIndex}"></div>
-    <button onclick="addDish(${mealIndex})" class="add-dish-btn">+ Добавить блюдо</button>
+    <div class="dishes-builder" data-meal="${mealIndex}"></div>
+    <button onclick="addDish(${mealIndex})" class="btn-add-dish">+ Добавить блюдо</button>
   `;
   
-  mealBuilder.appendChild(mealItem);
+  mealBuilder.appendChild(mealDiv);
 }
 
 // Удалить прием пищи
 function removeMeal(index) {
-  const mealItem = document.querySelector(`.meal-item[data-index="${index}"]`);
-  if (mealItem) {
-    mealItem.remove();
-  }
+  const meal = document.querySelector(`.builder-meal[data-index="${index}"]`);
+  if (meal) meal.remove();
 }
 
 // Добавить блюдо
 function addDish(mealIndex) {
-  const dishesList = document.querySelector(`.dishes-list[data-meal="${mealIndex}"]`);
-  const dishIndex = dishesList.children.length;
+  const dishesBuilder = document.querySelector(`.dishes-builder[data-meal="${mealIndex}"]`);
+  const dishIndex = dishesBuilder.children.length;
   
-  const dishItem = document.createElement('div');
-  dishItem.className = 'dish-item';
-  dishItem.dataset.dish = dishIndex;
+  const dishDiv = document.createElement('div');
+  dishDiv.className = 'builder-dish';
+  dishDiv.dataset.dish = dishIndex;
   
-  dishItem.innerHTML = `
+  dishDiv.innerHTML = `
     <input type="text" placeholder="Название блюда" class="dish-name" />
-    <input type="number" placeholder="Калории" class="dish-calories" min="0" />
-    <input type="number" placeholder="Белки (г)" class="dish-protein" min="0" />
-    <input type="number" placeholder="Углеводы (г)" class="dish-carbs" min="0" />
-    <input type="number" placeholder="Жиры (г)" class="dish-fats" min="0" />
-    <button onclick="removeDish(${mealIndex}, ${dishIndex})" class="remove-dish-btn">✕</button>
+    <div class="dish-macros-inputs">
+      <input type="number" placeholder="ккал" class="dish-calories" min="0" />
+      <input type="number" placeholder="Б" class="dish-protein" min="0" />
+      <input type="number" placeholder="У" class="dish-carbs" min="0" />
+      <input type="number" placeholder="Ж" class="dish-fats" min="0" />
+    </div>
   `;
   
-  dishesList.appendChild(dishItem);
-}
-
-// Удалить блюдо
-function removeDish(mealIndex, dishIndex) {
-  const dishItem = document.querySelector(`.dishes-list[data-meal="${mealIndex}"] .dish-item[data-dish="${dishIndex}"]`);
-  if (dishItem) {
-    dishItem.remove();
-  }
+  dishesBuilder.appendChild(dishDiv);
 }
 
 // Сохранить рацион
 function saveDiet() {
   const meals = [];
-  const mealItems = document.querySelectorAll('.meal-item');
+  const mealItems = document.querySelectorAll('.builder-meal');
   
   mealItems.forEach(mealItem => {
     const mealName = mealItem.querySelector('.meal-name').value.trim();
     const mealTime = mealItem.querySelector('.meal-time').value;
     
-    if (!mealName) {
-      notify('Заполни название приема пищи');
-      return;
-    }
+    if (!mealName) return;
     
     const dishes = [];
-    const dishItems = mealItem.querySelectorAll('.dish-item');
+    const dishItems = mealItem.querySelectorAll('.builder-dish');
     
     dishItems.forEach(dishItem => {
       const dishName = dishItem.querySelector('.dish-name').value.trim();
@@ -117,16 +112,19 @@ function saveDiet() {
   });
   
   if (meals.length === 0) {
-    notify('Добавь хотя бы один прием пищи с блюдами');
+    toast('Добавь хотя бы один прием пищи');
     return;
   }
   
   currentDiet.meals = meals;
-  localStorage.setItem('foodGeneratorDiet', JSON.stringify(currentDiet));
-  notify('✅ Рацион сохранен!');
+  localStorage.setItem('dietGeneratorData', JSON.stringify(currentDiet));
+  toast('✅ Рацион сохранен!');
   
   // Очистить форму
   document.getElementById('mealBuilder').innerHTML = '';
+  
+  // Переключиться на главную
+  setTimeout(() => showSection('home'), 500);
 }
 
 // Импорт рациона
@@ -134,7 +132,7 @@ function importDiet() {
   const importData = document.getElementById('importData').value.trim();
   
   if (!importData) {
-    notify('Вставь JSON данные');
+    toast('Вставь JSON данные');
     return;
   }
   
@@ -142,54 +140,54 @@ function importDiet() {
     const data = JSON.parse(importData);
     
     if (!data.meals || !Array.isArray(data.meals)) {
-      notify('Неверный формат: отсутствует массив meals');
+      toast('Неверный формат: нет массива meals');
       return;
     }
     
-    // Валидация структуры
+    // Валидация
     for (const meal of data.meals) {
       if (!meal.name || !meal.dishes || !Array.isArray(meal.dishes)) {
-        notify('Неверный формат: проверь структуру приемов пищи');
+        toast('Неверный формат приемов пищи');
         return;
-      }
-      
-      for (const dish of meal.dishes) {
-        if (!dish.name || typeof dish.calories !== 'number') {
-          notify('Неверный формат: проверь структуру блюд');
-          return;
-        }
       }
     }
     
     currentDiet = data;
-    localStorage.setItem('foodGeneratorDiet', JSON.stringify(currentDiet));
-    notify('✅ Рацион импортирован!');
+    localStorage.setItem('dietGeneratorData', JSON.stringify(currentDiet));
+    toast('✅ Рацион импортирован!');
     document.getElementById('importData').value = '';
     
+    setTimeout(() => showSection('home'), 500);
+    
   } catch (e) {
-    notify('Ошибка парсинга JSON: ' + e.message);
+    toast('Ошибка: ' + e.message);
   }
 }
 
-// Загрузить рацион из localStorage
+// Загрузить рацион
 function loadDiet() {
-  const saved = localStorage.getItem('foodGeneratorDiet');
+  const saved = localStorage.getItem('dietGeneratorData');
   if (saved) {
     try {
       currentDiet = JSON.parse(saved);
     } catch (e) {
-      console.error('Ошибка загрузки рациона:', e);
+      console.error('Ошибка загрузки:', e);
     }
   }
 }
 
 // Отобразить рацион
 function displayDiet() {
-  const mealsList = document.getElementById('mealsList');
-  mealsList.innerHTML = '';
+  const container = document.getElementById('mealsContainer');
+  container.innerHTML = '';
   
   if (!currentDiet.meals || currentDiet.meals.length === 0) {
-    mealsList.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.5); padding: 40px;">Рацион пуст. Создай или импортируй рацион.</p>';
+    container.innerHTML = `
+      <div class="empty-state">
+        <div class="empty-state-icon">🍽️</div>
+        <div class="empty-state-text">Рацион пуст<br>Создай или импортируй рацион</div>
+      </div>
+    `;
     updateStats(0, 0, 0, 0);
     return;
   }
@@ -211,25 +209,27 @@ function displayDiet() {
       totalFats += dish.fats || 0;
       
       dishesHTML += `
-        <div class="dish-list-item">
+        <div class="dish-item">
           <div class="dish-name">${dish.name}</div>
           <div class="dish-macros">
-            <span>${dish.calories || 0} ккал</span>
-            <span>Б: ${dish.protein || 0}г</span>
-            <span>У: ${dish.carbs || 0}г</span>
-            <span>Ж: ${dish.fats || 0}г</span>
+            <span class="macro-badge">${dish.calories || 0} ккал</span>
+            <span class="macro-badge">Б: ${dish.protein || 0}г</span>
+            <span class="macro-badge">У: ${dish.carbs || 0}г</span>
+            <span class="macro-badge">Ж: ${dish.fats || 0}г</span>
           </div>
         </div>
       `;
     });
     
     mealCard.innerHTML = `
-      <h3>${meal.name}</h3>
-      <div class="meal-time">⏰ ${meal.time || 'Не указано'}</div>
+      <div class="meal-card-header">
+        <div class="meal-name">${meal.name}</div>
+        <div class="meal-time">⏰ ${meal.time || '--:--'}</div>
+      </div>
       ${dishesHTML}
     `;
     
-    mealsList.appendChild(mealCard);
+    container.appendChild(mealCard);
   });
   
   updateStats(totalCalories, totalProtein, totalCarbs, totalFats);
@@ -245,18 +245,19 @@ function updateStats(calories, protein, carbs, fats) {
 
 // Очистить рацион
 function clearDiet() {
-  if (confirm('Точно хочешь удалить весь рацион?')) {
+  if (confirm('Удалить весь рацион?')) {
     currentDiet = { meals: [] };
-    localStorage.removeItem('foodGeneratorDiet');
+    localStorage.removeItem('dietGeneratorData');
     displayDiet();
-    notify('🗑️ Рацион очищен');
+    toast('🗑️ Рацион очищен');
+    showSection('home');
   }
 }
 
-// Уведомления
-function notify(text) {
-  const n = document.getElementById('notify');
-  n.textContent = text;
-  n.classList.add('show');
-  setTimeout(() => n.classList.remove('show'), 3000);
+// Toast уведомления
+function toast(text) {
+  const t = document.getElementById('toast');
+  t.textContent = text;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
 }
