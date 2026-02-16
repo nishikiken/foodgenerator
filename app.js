@@ -32,6 +32,7 @@ if (window.Telegram && window.Telegram.WebApp) {
 window.addEventListener('DOMContentLoaded', () => {
   loadDiet();
   loadTheme();
+  loadRecipes();
   displayDiet();
 });
 
@@ -342,6 +343,17 @@ function showAbout() {
 // ===== РЕЦЕПТЫ =====
 let currentRecipes = [];
 
+function loadRecipes() {
+  const saved = localStorage.getItem('dietGeneratorRecipes');
+  if (saved) {
+    try {
+      currentRecipes = JSON.parse(saved);
+    } catch (e) {
+      console.error('Ошибка загрузки рецептов:', e);
+    }
+  }
+}
+
 function showCreateRecipe() {
   document.getElementById('recipeForm').style.display = 'block';
   document.getElementById('ingredientsList').innerHTML = '';
@@ -467,11 +479,6 @@ function saveRecipe() {
 function displayRecipes() {
   const list = document.getElementById('recipesList');
   list.innerHTML = '';
-  
-  const saved = localStorage.getItem('dietGeneratorRecipes');
-  if (saved) {
-    currentRecipes = JSON.parse(saved);
-  }
   
   if (currentRecipes.length === 0) {
     list.innerHTML = '<div class="empty-recipes">Нет рецептов<br>Создай свой первый рецепт</div>';
