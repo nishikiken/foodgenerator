@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<title>Food Generator - Твой персональный рацион</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+  <h1>FOOD GENERATOR</h1>
+  <nav>
+    <button onclick="showSection('create')">Создать рацион</button>
+    <button onclick="showSection('import')">Импорт рациона</button>
+    <button onclick="showSection('my')">Мой рацион</button>
+  </nav>
+</header>
+
+<main>
+  <!-- Секция создания рациона -->
+  <section class="section" id="createSection">
+    <div class="content-box">
+      <h2>Создай свой рацион</h2>
+      <p class="hint">Добавь приемы пищи и блюда вручную</p>
+      
+      <div class="meal-builder" id="mealBuilder">
+        <!-- Приемы пищи будут добавляться здесь -->
+      </div>
+      
+      <button onclick="addMeal()" class="add-btn">+ Добавить прием пищи</button>
+      <button onclick="saveDiet()" class="submit-btn">💾 Сохранить рацион</button>
+    </div>
+  </section>
+
+  <!-- Секция импорта рациона -->
+  <section class="section" id="importSection" style="display: none;">
+    <div class="content-box">
+      <h2>Импорт рациона от ИИ</h2>
+      <p class="hint">Вставь рацион, созданный любым ИИ в правильном формате</p>
+      
+      <div class="format-info">
+        <h3>📋 Формат для ИИ:</h3>
+        <div class="code-block">
+          <pre>Создай рацион питания в следующем JSON формате:
+{
+  "meals": [
+    {
+      "name": "Завтрак",
+      "time": "08:00",
+      "dishes": [
+        {"name": "Овсянка", "calories": 300, "protein": 10, "carbs": 50, "fats": 5},
+        {"name": "Банан", "calories": 100, "protein": 1, "carbs": 25, "fats": 0}
+      ]
+    }
+  ]
+}</pre>
+        </div>
+      </div>
+      
+      <div class="form-field">
+        <label>Вставь JSON от ИИ</label>
+        <textarea id="importData" placeholder='{"meals": [...]}' rows="10"></textarea>
+      </div>
+      
+      <button onclick="importDiet()" class="submit-btn">📥 Импортировать</button>
+    </div>
+  </section>
+
+  <!-- Секция просмотра рациона -->
+  <section class="section" id="mySection" style="display: none;">
+    <div class="content-box">
+      <h2>Мой рацион</h2>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalCalories">0</div>
+          <div class="stat-label">Калории</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalProtein">0</div>
+          <div class="stat-label">Белки (г)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalCarbs">0</div>
+          <div class="stat-label">Углеводы (г)</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalFats">0</div>
+          <div class="stat-label">Жиры (г)</div>
+        </div>
+      </div>
+      
+      <div class="meals-list" id="mealsList">
+        <!-- Список приемов пищи -->
+      </div>
+      
+      <button onclick="clearDiet()" class="delete-btn">🗑️ Очистить рацион</button>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="footer-content">
+    <span>Food Generator · </span>
+    <a href="https://t.me/imCEOmf" target="_blank" class="footer-link">
+      <span class="footer-icon">Ⓡ</span> t.me/@imCEOmf
+    </a>
+    <span> · © 2026</span>
+  </div>
+</footer>
+
+<div class="notify" id="notify"></div>
+
+<script src="app.js"></script>
+
+</body>
+</html>
