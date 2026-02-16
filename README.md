@@ -1,4 +1,4 @@
-# 🍽️ Food Generator
+# 🍽️ Diet Generator
 
 Веб-приложение для создания и управления персональным рационом питания.
 
@@ -131,7 +131,7 @@ foodgenerator/
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, WebAppInfo
 
 keyboard = [
-    [InlineKeyboardButton("🍽️ Открыть Food Generator", web_app=WebAppInfo(url="https://your-domain.com"))]
+    [InlineKeyboardButton("🍽️ Открыть Diet Generator", web_app=WebAppInfo(url="https://your-domain.com"))]
 ]
 reply_markup = InlineKeyboardMarkup(keyboard)
 await update.message.reply_text("Создай свой рацион:", reply_markup=reply_markup)
@@ -147,4 +147,4 @@ MIT
 
 ---
 
-**Food Generator** · t.me/@imCEOmf · © 2026
+**Diet Generator** · t.me/@imCEOmf · © 2026
