@@ -1,9 +1,37 @@
 // Хранилище данных
 let currentDiet = { meals: [] };
+let tgUser = null;
+
+// Инициализация Telegram WebApp
+if (window.Telegram && window.Telegram.WebApp) {
+  const tg = window.Telegram.WebApp;
+  tg.ready();
+  tg.expand();
+  
+  // Получаем данные пользователя
+  tgUser = tg.initDataUnsafe?.user;
+  
+  if (tgUser) {
+    // Устанавливаем имя пользователя
+    const firstName = tgUser.first_name || '';
+    const lastName = tgUser.last_name || '';
+    const username = tgUser.username || '';
+    
+    document.getElementById('profileName').textContent = `${firstName} ${lastName}`.trim() || 'Пользователь';
+    document.getElementById('profileUsername').textContent = username ? `@${username}` : '';
+    
+    // Устанавливаем фото профиля если есть
+    if (tgUser.photo_url) {
+      document.getElementById('profileAvatar').src = tgUser.photo_url;
+      document.getElementById('userAvatar').src = tgUser.photo_url;
+    }
+  }
+}
 
 // Загрузка при старте
 window.addEventListener('DOMContentLoaded', () => {
   loadDiet();
+  loadTheme();
   displayDiet();
 });
 
@@ -260,4 +288,34 @@ function toast(text) {
   t.textContent = text;
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// Переключение темы
+function toggleTheme() {
+  const body = document.body;
+  const isDark = body.classList.contains('dark-theme');
+  
+  if (isDark) {
+    body.classList.remove('dark-theme');
+    document.getElementById('themeLabel').innerHTML = '☀️ Светлая тема';
+    localStorage.setItem('theme', 'light');
+  } else {
+    body.classList.add('dark-theme');
+    document.getElementById('themeLabel').innerHTML = '🌙 Темная тема';
+    localStorage.setItem('theme', 'dark');
+  }
+}
+
+// Загрузка темы
+function loadTheme() {
+  const savedTheme = localStorage.getItem('theme');
+  const body = document.body;
+  
+  if (savedTheme === 'light') {
+    body.classList.remove('dark-theme');
+    document.getElementById('themeLabel').innerHTML = '☀️ Светлая тема';
+  } else {
+    body.classList.add('dark-theme');
+    document.getElementById('themeLabel').innerHTML = '🌙 Темная тема';
+  }
 }

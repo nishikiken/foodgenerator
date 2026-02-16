@@ -4,10 +4,11 @@
 <meta charset="UTF-8" />
 <title>Diet Generator</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="dark-theme">
 
 <!-- Главный контейнер -->
 <div class="app-container">
@@ -16,7 +17,8 @@
   <div class="top-bar">
     <div class="logo">🍽️ Diet Generator</div>
     <div class="user-info" onclick="showSection('profile')">
-      <div class="avatar">👤</div>
+      <img class="avatar" id="userAvatar" src="" alt="👤" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+      <div class="avatar-fallback" id="avatarFallback">👤</div>
     </div>
   </div>
 
@@ -102,11 +104,19 @@
       </div>
       
       <div class="profile-card">
-        <div class="profile-avatar">👤</div>
-        <div class="profile-name">Пользователь</div>
+        <img class="profile-avatar" id="profileAvatar" src="" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="profile-avatar-fallback" id="profileAvatarFallback">👤</div>
+        <div class="profile-name" id="profileName">Пользователь</div>
+        <div class="profile-username" id="profileUsername">@username</div>
       </div>
       
       <div class="menu-list">
+        <div class="menu-item" onclick="toggleTheme()">
+          <span id="themeLabel">🌙 Темная тема</span>
+          <span class="toggle-switch" id="themeToggle">
+            <span class="toggle-slider"></span>
+          </span>
+        </div>
         <div class="menu-item" onclick="clearDiet()">
           <span>🗑️ Очистить рацион</span>
           <span class="arrow">›</span>
